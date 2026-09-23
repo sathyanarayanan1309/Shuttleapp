@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MSC">
 <meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap">
 <style>
 :root {
@@ -1357,46 +1359,10 @@ function e(str) {
   return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ─── PWA: MANIFEST (injected as blob) ───────────────────────
-(function(){
-  var manifest = {
-    name: 'Madras Shuttle Club',
-    short_name: 'MSC',
-    description: 'Book your badminton session in Chennai',
-    start_url: '/',
-    display: 'standalone',
-    background_color: '#070C18',
-    theme_color: '#070C18',
-    orientation: 'portrait',
-    icons: [
-      {src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="40" fill="%23070C18"/><text y="130" x="96" font-size="110" text-anchor="middle">🏸</text></svg>', sizes: '192x192', type: 'image/svg+xml'},
-      {src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="%23070C18"/><text y="360" x="256" font-size="300" text-anchor="middle">🏸</text></svg>', sizes: '512x512', type: 'image/svg+xml'}
-    ]
-  };
-  try {
-    var blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-    var url = URL.createObjectURL(blob);
-    var link = document.createElement('link');
-    link.rel = 'manifest'; link.href = url;
-    document.head.appendChild(link);
-  } catch(e){}
-})();
-
 // ─── PWA: SERVICE WORKER ─────────────────────────────────────
-(function(){
-  if (!('serviceWorker' in navigator)) return;
-  var swCode = [
-    "var CACHE='msc-v1';",
-    "self.addEventListener('install',function(e){self.skipWaiting();});",
-    "self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(keys){return Promise.all(keys.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));}));});",
-    "self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(function(r){var rc=r.clone();caches.open(CACHE).then(function(c){c.put(e.request,rc);});return r;}).catch(function(){return caches.match(e.request);}));});"
-  ].join('\n');
-  try {
-    var blob = new Blob([swCode], {type:'application/javascript'});
-    var url = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(url).catch(function(){});
-  } catch(e){}
-})();
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
 
 // ─── PWA: INSTALL PROMPT ─────────────────────────────────────
 var _installPrompt = null;
