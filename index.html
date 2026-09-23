@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Madras Shuttle Club</title>
+<meta name="description" content="Book your badminton session with Madras Shuttle Club — Chennai">
+<meta name="theme-color" content="#070C18">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MSC">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg:         #070C18;
+  --surface:    #0F1829;
+  --surface-2:  #172035;
+  --surface-3:  #1E2A45;
+  --accent:     #B9FF2A;
+  --accent-dim: rgba(185,255,42,0.10);
+  --accent-glow:rgba(185,255,42,0.25);
+  --text:       #EDF0FF;
+  --text-2:     #7A8DB0;
+  --text-3:     #44556E;
+  --danger:     #FF5252;
+  --danger-dim: rgba(255,82,82,0.12);
+  --warn:       #FFB800;
+  --success:    #2AFFB4;
+  --border:     rgba(255,255,255,0.07);
+  --radius:     18px;
+  --radius-sm:  11px;
+  --nav-h:      74px;
+  --safe-bottom:env(safe-area-inset-bottom, 0px);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{height:100%;-webkit-text-size-adjust:100%;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  min-height:100%;
+  max-width:430px;
+  margin:0 auto;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;}
+input{font-family:inherit;outline:none;}
+a{color:inherit;text-decoration:none;}
+
+/* ─── APP SHELL ─── */
+#app{min-height:100vh;display:flex;flex-direction:column;}
+
+/* ─── SCREENS ─── */
+.screen{display:none;flex-direction:column;min-height:100vh;}
+.screen.active{display:flex;}
+
+/* ─── SCROLLABLE CONTENT ─── */
+.scroll-area{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 16px);
+  -webkit-overflow-scrolling:touch;
+}
+.scroll-area::-webkit-scrollbar{display:none;}
+
+/* ─── BOTTOM NAV ─── */
+.bottom-nav{
+  position:fixed;
+  bottom:0; left:50%; transform:translateX(-50%);
+  width:100%; max-width:430px;
+  height:calc(var(--nav-h) + var(--safe-bottom));
+  padding-bottom:var(--safe-bottom);
+  background:rgba(7,12,24,0.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:flex; align-items:flex-start;
+  z-index:100;
+}
+.nav-items{display:flex;width:100%;padding-top:10px;}
+.nav-item{
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; gap:4px; padding:6px 4px;
+  cursor:pointer; transition:opacity .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-item .nav-icon{
+  width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+  border-radius:8px; transition:background .15s;
+  font-size:18px;
+}
+.nav-item .nav-label{
+  font-size:10px; font-weight:600; color:var(--text-3);
+  letter-spacing:.3px; transition:color .15s;
+  text-transform:uppercase;
+}
+.nav-item.active .nav-icon{background:var(--accent-dim);}
+.nav-item.active .nav-label{color:var(--accent);}
+.nav-item svg{width:20px;height:20px;stroke:var(--text-3);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s;}
+.nav-item.active svg{stroke:var(--accent);}
+
+/* ─── HEADERS ─── */
+.page-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px 0;
+}
+.page-title{
+  font-family:'Syne',sans-serif;
+  font-size:22px; font-weight:800; color:var(--text);
+}
+.page-sub{font-size:12px;color:var(--text-2);margin-top:1px;}
+
+/* ─── BRAND HEADER ─── */
+.brand-header{
+  padding:20px 20px 0;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.brand-wordmark{
+  font-family:'Syne',sans-serif;
+  font-size:16px; font-weight:800;
+  letter-spacing:.5px; color:var(--text);
+  display:flex; align-items:center; gap:8px;
+}
+.brand-shuttle{
+  width:28px; height:28px; background:var(--accent-dim);
+  border-radius:8px; display:flex; align-items:center; justify-content:center;
+  font-size:15px;
+}
+.header-action{
+  width:36px; height:36px; border-radius:10px;
+  background:var(--surface-2); display:flex;
+  align-items:center; justify-content:center;
+  cursor:pointer; color:var(--text-2); font-size:16px;
+}
+
+/* ─── SESSION HERO CARD ─── */
+.session-hero{
+  margin:16px 20px 0;
+  background:var(--surface);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  overflow:hidden;
+  position:relative;
+}
+.session-hero-inner{padding:20px 20px 18px;}
+.session-hero-tag{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:10px; font-weight:600; letter-spacing:.8px;
+  color:var(--accent); text-transform:uppercase;
+  margin-bottom:10px;
+}
+.session-hero-tag::before{
+  content:''; width:6px; height:6px;
+  background:var(--accent); border-radius:50%;
+  display:inline-block;
+  box-shadow:0 0 6px var(--accent);
+}
+.session-hero-title{
+  font-family:'Syne',sans-serif;
+  font-size:22px; font-weight:800; line-height:1.15;
+  color:var(--text); margin-bottom:14px;
+  text-wrap:balance;
+}
+.session-meta{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
+.session-meta-row{
+  display:flex; align-items:center; gap:8px;
+  font-size:13px; color:var(--text-2);
+}
+.session-meta-row svg{width:14px;height:14px;stroke:var(--text-3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+
+/* capacity bar */
+.capacity-wrap{margin-bottom:18px;}
+.capacity-label{
+  display:flex; justify-content:space-between;
+  font-size:12px; margin-bottom:7px;
+}
+.capacity-label .filled{
+  font-family:'Syne',sans-serif; font-size:18px; font-weight:800;
+  color:var(--text); line-height:1;
+}
+.capacity-label .of{font-size:13px;color:var(--text-2);font-weight:500;align-self:flex-end;padding-bottom:1px;}
+.capacity-label .slots-left{
+  font-size:12px; color:var(--text-2);
+  align-self:flex-end; padding-bottom:2px;
+}
+.capacity-bar{
+  height:6px; background:var(--surface-3); border-radius:3px; overflow:hidden;
+}
+.capacity-fill{
+  height:100%; border-radius:3px;
+  background:linear-gradient(90deg,var(--accent) 0%,#D0FF60 100%);
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+}
+.capacity-fill.warn{background:linear-gradient(90deg,var(--warn) 0%,#FFD966 100%);}
+.capacity-fill.full{background:linear-gradient(90deg,var(--danger) 0%,#FF8585 100%);}
+
+/* join button */
+.btn-join{
+  width:100%; padding:15px;
+  background:var(--accent); color:#070C18;
+  font-size:15px; font-weight:700;
+  border-radius:var(--radius-sm); border:none;
+  letter-spacing:.3px;
+  transition:opacity .15s, transform .1s;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-join:active{opacity:.85; transform:scale(.98);}
+.btn-join.cancel{background:var(--danger-dim); color:var(--danger); border:1px solid rgba(255,82,82,.25);}
+.btn-join.waitlist{background:var(--surface-3); color:var(--text); border:1px solid var(--border);}
+.btn-join:disabled{opacity:.4;cursor:not-allowed;}
+
+.price-tag{
+  text-align:center; font-size:12px; color:var(--text-3);
+  margin-top:10px; font-weight:500;
+}
+.price-tag span{color:var(--text-2);}
+
+/* confirmed badge */
+.confirmed-badge{
+  display:flex; align-items:center; gap:8px;
+  background:rgba(42,255,180,.08); border:1px solid rgba(42,255,180,.2);
+  border-radius:var(--radius-sm); padding:10px 14px;
+  font-size:13px; color:var(--success); font-weight:600;
+  margin-bottom:12px;
+}
+.confirmed-badge svg{width:16px;height:16px;stroke:var(--success);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+
+/* waitlist badge */
+.waitlist-badge{
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,184,0,.08); border:1px solid rgba(255,184,0,.2);
+  border-radius:var(--radius-sm); padding:10px 14px;
+  font-size:13px; color:var(--warn); font-weight:600;
+  margin-bottom:12px;
+}
+
+/* ─── SECTION LABEL ─── */
+.section-label{
+  font-size:11px; font-weight:700; letter-spacing:.8px;
+  color:var(--text-3); text-transform:uppercase;
+  padding:20px 20px 10px;
+}
+
+/* ─── SESSION CARDS (list) ─── */
+.session-list{display:flex;flex-direction:column;gap:10px;padding:0 20px;}
+.session-card{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:16px;
+  cursor:pointer; transition:border-color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.session-card:active{border-color:rgba(185,255,42,.3);}
+.session-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.session-card-title{
+  font-family:'Syne',sans-serif;
+  font-size:16px; font-weight:800; line-height:1.2; color:var(--text);
+}
+.session-price-chip{
+  font-family:'Syne',sans-serif;
+  font-size:14px; font-weight:800; color:var(--accent);
+  flex-shrink:0; padding-top:2px;
+}
+.session-card-info{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+.info-chip{
+  display:flex; align-items:center; gap:5px;
+  font-size:12px; color:var(--text-2);
+}
+.info-chip svg{width:12px;height:12px;stroke:var(--text-3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.session-card-footer{display:flex;align-items:center;gap:10px;}
+.mini-bar-wrap{flex:1;}
+.mini-bar{height:4px;background:var(--surface-3);border-radius:2px;overflow:hidden;}
+.mini-fill{height:100%;border-radius:2px;background:var(--accent);}
+.mini-fill.warn{background:var(--warn);}
+.mini-fill.full{background:var(--danger);}
+.mini-count{font-size:11px;color:var(--text-2);font-weight:600;white-space:nowrap;}
+.status-chip{
+  font-size:10px; font-weight:700; letter-spacing:.5px;
+  padding:3px 8px; border-radius:20px; text-transform:uppercase;
+}
+.status-chip.open{background:var(--accent-dim);color:var(--accent);}
+.status-chip.full{background:var(--danger-dim);color:var(--danger);}
+.status-chip.booked{background:rgba(42,255,180,.1);color:var(--success);}
+.status-chip.waitlist{background:rgba(255,184,0,.1);color:var(--warn);}
+
+/* ─── PLAYERS ─── */
+.players-list{display:flex;flex-direction:column;gap:1px;padding:0 20px;}
+.player-card{
+  background:var(--surface); border-radius:0; padding:14px 0;
+  display:flex; align-items:center; gap:13px;
+  border-bottom:1px solid var(--border);
+}
+.players-list .player-card:first-child{border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.players-list .player-card:last-child{border-bottom:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);}
+.players-list{background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);padding:0 16px;}
+.player-avatar{
+  width:40px; height:40px; border-radius:50%;
+  background:var(--surface-3); display:flex;
+  align-items:center; justify-content:center;
+  font-family:'Syne',sans-serif; font-size:14px; font-weight:800;
+  color:var(--accent); flex-shrink:0;
+}
+.player-info{flex:1;min-width:0;}
+.player-name{
+  font-size:14px;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.player-name-wrap{display:flex;align-items:center;gap:6px;}
+.admin-star{font-size:11px;color:var(--accent);}
+.player-sub{font-size:12px;color:var(--text-3);margin-top:1px;}
+.skill-chip{
+  font-size:10px; font-weight:700; letter-spacing:.3px;
+  padding:3px 8px; border-radius:20px; flex-shrink:0;
+}
+.skill-beginner{background:rgba(93,156,255,.12);color:#7EB3FF;}
+.skill-intermediate{background:rgba(255,184,0,.12);color:var(--warn);}
+.skill-advanced{background:rgba(255,82,82,.12);color:var(--danger);}
+.skill-expert{background:rgba(185,255,42,.12);color:var(--accent);}
+
+/* ─── PROFILE ─── */
+.profile-hero{
+  padding:24px 20px 20px;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+}
+.profile-avatar{
+  width:72px; height:72px; border-radius:50%;
+  background:var(--surface-2);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Syne',sans-serif; font-size:26px; font-weight:800;
+  color:var(--accent);
+  border:3px solid var(--accent-dim);
+}
+.profile-name{
+  font-family:'Syne',sans-serif;
+  font-size:20px; font-weight:800; color:var(--text);
+}
+.profile-meta{font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:8px;}
+.profile-dot{color:var(--text-3);}
+.stats-row{
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:10px; padding:0 20px 20px;
+}
+.stat-card{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:14px 12px;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:22px; font-weight:800; color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+.stat-label{font-size:10px;color:var(--text-3);font-weight:600;letter-spacing:.3px;text-transform:uppercase;}
+
+.profile-section{padding:0 20px 16px;}
+.profile-section-title{
+  font-size:11px; font-weight:700; letter-spacing:.8px;
+  color:var(--text-3); text-transform:uppercase; margin-bottom:10px;
+}
+.profile-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:13px 0; border-bottom:1px solid var(--border);
+  cursor:pointer;
+}
+.profile-row:last-child{border-bottom:none;}
+.profile-row-label{font-size:14px;font-weight:500;color:var(--text);}
+.profile-row-value{font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:6px;}
+.profile-row-value svg{width:14px;height:14px;stroke:var(--text-3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.profile-block{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:4px 0;
+  margin-bottom:16px;
+}
+
+/* ─── LOGIN ─── */
+#screen-login{
+  background:var(--bg);
+  justify-content:center; align-items:center;
+  padding:40px 28px;
+  min-height:100vh;
+}
+.login-brand{
+  text-align:center; margin-bottom:48px;
+}
+.login-logo{
+  width:64px; height:64px; background:var(--accent-dim);
+  border:1px solid rgba(185,255,42,.25);
+  border-radius:20px; display:flex; align-items:center;
+  justify-content:center; font-size:32px; margin:0 auto 16px;
+}
+.login-brand-name{
+  font-family:'Syne',sans-serif;
+  font-size:26px; font-weight:800; color:var(--text); margin-bottom:4px;
+}
+.login-tagline{font-size:13px;color:var(--text-2);}
+
+.login-form{width:100%;}
+.field-label{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:7px;letter-spacing:.2px;}
+.field-input{
+  width:100%; padding:14px 16px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--text);
+  font-size:16px; margin-bottom:16px;
+  transition:border-color .15s;
+}
+.field-input:focus{border-color:rgba(185,255,42,.4);}
+.field-input::placeholder{color:var(--text-3);}
+.btn-primary{
+  width:100%; padding:15px;
+  background:var(--accent); color:#070C18;
+  font-size:15px; font-weight:700;
+  border-radius:var(--radius-sm);
+  transition:opacity .15s, transform .1s;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-primary:active{opacity:.85;transform:scale(.98);}
+
+.login-note{
+  text-align:center; font-size:12px;
+  color:var(--text-3); margin-top:14px; line-height:1.6;
+}
+
+/* Skill picker */
+.skill-picker{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.skill-opt{
+  padding:9px 16px; border-radius:20px;
+  border:1px solid var(--border); background:var(--surface);
+  font-size:13px; font-weight:600; color:var(--text-2);
+  cursor:pointer; transition:all .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.skill-opt.selected{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+
+/* ─── ADMIN PANEL ─── */
+.admin-badge{
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--accent-dim); border:1px solid rgba(185,255,42,.3);
+  border-radius:20px; padding:4px 10px;
+  font-size:11px; font-weight:700; color:var(--accent);
+  letter-spacing:.3px;
+}
+.admin-section{padding:0 20px 16px;}
+.admin-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;}
+.admin-form-title{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:800;
+  color:var(--text);margin-bottom:16px;
+}
+.form-row{margin-bottom:14px;}
+.form-row:last-child{margin-bottom:0;}
+.form-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.form-input{
+  width:100%;padding:11px 13px;
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text);
+  font-size:14px;transition:border-color .15s;
+}
+.form-input:focus{border-color:rgba(185,255,42,.4);}
+.form-input::placeholder{color:var(--text-3);}
+.form-row-half{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.btn-secondary{
+  padding:12px 20px;background:var(--surface-3);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text);font-size:14px;font-weight:600;
+  transition:opacity .15s;
+}
+.btn-secondary:active{opacity:.75;}
+.btn-accent{
+  padding:12px 20px;background:var(--accent);
+  border-radius:var(--radius-sm);
+  color:#070C18;font-size:14px;font-weight:700;
+  transition:opacity .15s, transform .1s;
+}
+.btn-accent:active{opacity:.85;transform:scale(.98);}
+.btn-row{display:flex;gap:10px;margin-top:16px;}
+.btn-row button{flex:1;}
+
+/* Stats overview (admin home) */
+.stat-overview{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:10px; padding:0 20px 16px;
+}
+.stat-tile{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:16px;
+}
+.stat-tile-num{
+  font-family:'Syne',sans-serif;
+  font-size:28px; font-weight:800; color:var(--text);
+  line-height:1; margin-bottom:4px;
+  font-variant-numeric:tabular-nums;
+}
+.stat-tile-num.accent{color:var(--accent);}
+.stat-tile-label{font-size:11px;color:var(--text-2);font-weight:500;}
+
+/* ─── SHARE SHEET ─── */
+.share-btn{
+  display:flex; align-items:center; gap:8px;
+  padding:11px 16px; background:var(--surface-2);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  color:var(--text-2); font-size:13px; font-weight:600;
+  cursor:pointer; transition:all .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.share-btn:active{background:var(--surface-3);}
+.share-btn svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ─── TOAST ─── */
+.toast{
+  position:fixed; bottom:calc(var(--nav-h) + 16px); left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--surface-3); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:12px 20px;
+  font-size:13px; font-weight:600; color:var(--text);
+  white-space:nowrap; z-index:200;
+  opacity:0; transition:opacity .25s, transform .25s;
+  pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{border-color:rgba(42,255,180,.3);color:var(--success);}
+
+/* ─── INSTALL BANNER ─── */
+.install-banner{
+  position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;
+  transform:translateX(-50%) translateY(20px);
+  width:calc(100% - 32px);max-width:398px;
+  background:var(--surface-2);border:1px solid rgba(185,255,42,.25);
+  border-radius:var(--radius);padding:14px 16px;
+  display:flex;align-items:center;gap:12px;z-index:300;
+  opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;
+}
+.install-banner.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+.install-banner-icon{font-size:28px;flex-shrink:0;}
+.install-banner-text{flex:1;}
+.install-banner-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px;}
+.install-banner-sub{font-size:11px;color:var(--text-2);}
+.install-banner-btn{
+  background:var(--accent);color:#070C18;
+  font-size:12px;font-weight:700;padding:8px 14px;
+  border-radius:8px;white-space:nowrap;flex-shrink:0;
+}
+.install-close{color:var(--text-3);font-size:18px;padding:4px;cursor:pointer;flex-shrink:0;}
+
+/* ─── UTILS ─── */
+.px-20{padding:0 20px;}
+.mt-12{margin-top:12px;}
+.mt-16{margin-top:16px;}
+.mt-20{margin-top:20px;}
+.mb-16{margin-bottom:16px;}
+.mb-8{margin-bottom:8px;}
+.text-center{text-align:center;}
+.divider{height:1px;background:var(--border);margin:4px 20px;}
+.empty-state{
+  text-align:center;padding:48px 20px;
+  color:var(--text-3);font-size:14px;
+}
+.empty-state-icon{font-size:40px;margin-bottom:12px;}
+.empty-state-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--text-2);margin-bottom:6px;}
+
+/* court texture bg (subtle) */
+.court-bg{
+  position:absolute; inset:0; pointer-events:none; overflow:hidden;
+  opacity:.04;
+}
+.court-bg svg{width:100%;height:100%;}
+
+/* search */
+.search-wrap{
+  padding:12px 20px; display:flex; gap:10px; align-items:center;
+}
+.search-input{
+  flex:1; padding:10px 14px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--text); font-size:14px;
+}
+.search-input::placeholder{color:var(--text-3);}
+
+/* session detail badge */
+.detail-chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;}
+.detail-chip{
+  display:flex;align-items:center;gap:5px;
+  padding:7px 12px;background:var(--surface-2);border-radius:var(--radius-sm);
+  font-size:12px;color:var(--text-2);
+}
+.detail-chip svg{width:13px;height:13px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══ LOGIN SCREEN ═══ -->
+  <div id="screen-login" class="screen active">
+    <div class="login-brand">
+      <div class="login-logo">🏸</div>
+      <div class="login-brand-name">Madras Shuttle Club</div>
+      <div class="login-tagline">Chennai • Play. Rally. Repeat.</div>
+    </div>
+    <div class="login-form" id="login-form">
+      <div class="field-label">Your name</div>
+      <input class="field-input" id="login-name" type="text" placeholder="e.g. Karthik Rajan" autocomplete="name">
+      <div class="field-label">Phone number</div>
+      <input class="field-input" id="login-phone" type="tel" placeholder="98765 43210" autocomplete="tel">
+      <div class="field-label">Skill level</div>
+      <div class="skill-picker" id="skill-picker">
+        <div class="skill-opt" data-skill="Beginner" onclick="selectSkill(this)">Beginner</div>
+        <div class="skill-opt" data-skill="Intermediate" onclick="selectSkill(this)">Intermediate</div>
+        <div class="skill-opt" data-skill="Advanced" onclick="selectSkill(this)">Advanced</div>
+        <div class="skill-opt" data-skill="Expert" onclick="selectSkill(this)">Expert</div>
+      </div>
+      <button class="btn-primary" onclick="doLogin()">Join the Club 🏸</button>
+      <div class="login-note">Demo — no OTP needed. Your data stays on this device.</div>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN APP ═══ -->
+  <div id="screen-main" class="screen">
+
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-panel active scroll-area">
+      <div class="brand-header">
+        <div class="brand-wordmark">
+          <div class="brand-shuttle">🏸</div>
+          Madras Shuttle Club
+        </div>
+        <div class="header-action" onclick="shareApp()" title="Share">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+      </div>
+
+      <div class="section-label">Next Session</div>
+      <div id="home-hero"></div>
+
+      <div class="section-label" id="upcoming-label" style="display:none;">Also Upcoming</div>
+      <div class="session-list" id="home-upcoming" style="margin-bottom:16px;"></div>
+    </div>
+
+    <!-- SESSIONS TAB -->
+    <div id="tab-sessions" class="tab-panel scroll-area" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Sessions</div>
+          <div class="page-sub">Upcoming badminton sessions</div>
+        </div>
+        <div id="admin-create-btn" style="display:none;">
+          <button class="btn-accent" onclick="showCreateSession()" style="padding:9px 16px;font-size:13px;">+ Create</button>
+        </div>
+      </div>
+      <div class="session-list mt-16" id="all-sessions-list" style="margin-bottom:16px;"></div>
+    </div>
+
+    <!-- PLAYERS TAB -->
+    <div id="tab-players" class="tab-panel scroll-area" style="display:none;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Players</div>
+          <div class="page-sub" id="players-count-sub"></div>
+        </div>
+      </div>
+      <div class="search-wrap">
+        <input class="search-input" id="player-search" placeholder="Search members…" oninput="renderPlayers()">
+      </div>
+      <div id="players-list-wrap" style="padding:0 20px 16px;"></div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" class="tab-panel scroll-area" style="display:none;">
+      <div class="profile-hero">
+        <div class="profile-avatar" id="profile-avatar"></div>
+        <div style="text-align:center;">
+          <div class="profile-name" id="profile-name"></div>
+          <div class="profile-meta" id="profile-meta"></div>
+        </div>
+        <div id="profile-admin-badge" style="display:none;">
+          <div class="admin-badge">⚡ Admin</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-sessions">0</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-upcoming">0</div>
+          <div class="stat-label">Upcoming</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-streak">🏸</div>
+          <div class="stat-label">Member</div>
+        </div>
+      </div>
+
+      <div class="profile-section" id="my-bookings-section"></div>
+
+      <div class="profile-section">
+        <div class="profile-section-title">Account</div>
+        <div class="profile-block">
+          <div class="profile-row" onclick="showSkillEdit()">
+            <div class="profile-row-label">Skill Level</div>
+            <div class="profile-row-value" id="profile-skill-val">
+              — <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+          <div class="profile-row" onclick="shareApp()">
+            <div class="profile-row-label">Share App</div>
+            <div class="profile-row-value">
+              Share <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </div>
+          </div>
+          <div class="profile-row" id="admin-row" style="display:none;" onclick="switchTab('sessions'); setTimeout(()=>showCreateSession(),100);">
+            <div class="profile-row-label">Admin Panel</div>
+            <div class="profile-row-value">
+              Manage <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+          <div class="profile-row" onclick="doLogout()">
+            <div class="profile-row-label" style="color:var(--danger);">Sign Out</div>
+            <div class="profile-row-value"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <div style="text-align:center;font-size:11px;color:var(--text-3);">Madras Shuttle Club • Chennai, India</div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <div class="nav-items">
+        <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" id="nav-sessions" onclick="switchTab('sessions')">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <span class="nav-label">Sessions</span>
+        </div>
+        <div class="nav-item" id="nav-players" onclick="switchTab('players')">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <span class="nav-label">Players</span>
+        </div>
+        <div class="nav-item" id="nav-profile" onclick="switchTab('profile')">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <span class="nav-label">Profile</span>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ═══ SESSION DETAIL MODAL ═══ -->
+  <div id="modal-session" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:150;overflow-y:auto;max-width:430px;left:50%;transform:translateX(-50%);padding-bottom:40px;">
+    <div style="padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(7,12,24,.96);backdrop-filter:blur(20px);z-index:10;">
+      <button onclick="closeModal()" style="background:var(--surface-2);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--text-2);font-size:18px;flex-shrink:0;">←</button>
+      <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);">Session Details</div>
+    </div>
+    <div id="modal-content" style="padding:20px;"></div>
+  </div>
+
+  <!-- ═══ CREATE SESSION MODAL ═══ -->
+  <div id="modal-create" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:160;display:flex;align-items:flex-end;justify-content:center;max-width:430px;left:50%;transform:translateX(-50%);">
+    <div style="background:var(--surface);border-radius:var(--radius) var(--radius) 0 0;width:100%;padding:20px;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);">Create Session</div>
+        <button onclick="closeCreate()" style="background:var(--surface-2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text-2);font-size:16px;">✕</button>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Session Title</div>
+        <input class="form-input" id="cf-title" placeholder="e.g. Saturday Night Smash">
+      </div>
+      <div class="form-row">
+        <div class="form-label">Date</div>
+        <input class="form-input" id="cf-date" type="date">
+      </div>
+      <div class="form-row-half">
+        <div>
+          <div class="form-label">Start Time</div>
+          <input class="form-input" id="cf-start" type="time">
+        </div>
+        <div>
+          <div class="form-label">End Time</div>
+          <input class="form-input" id="cf-end" type="time">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">Venue</div>
+        <input class="form-input" id="cf-venue" placeholder="e.g. Chennai Badminton Arena, Anna Nagar">
+      </div>
+      <div class="form-row-half">
+        <div>
+          <div class="form-label">Capacity</div>
+          <input class="form-input" id="cf-cap" type="number" placeholder="28">
+        </div>
+        <div>
+          <div class="form-label">Price (₹)</div>
+          <input class="form-input" id="cf-price" type="number" placeholder="250">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="closeCreate()">Cancel</button>
+        <button class="btn-accent" onclick="createSession()">Create Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- INSTALL BANNER -->
+  <div class="install-banner" id="install-banner">
+    <div class="install-banner-icon">🏸</div>
+    <div class="install-banner-text">
+      <div class="install-banner-title">Add to Home Screen</div>
+      <div class="install-banner-sub">Install for quick access, works offline</div>
+    </div>
+    <button class="install-banner-btn" id="install-btn">Install</button>
+    <div class="install-close" onclick="dismissInstall()">✕</div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────
+var SESSIONS = [
+  {id:'s1',title:'Saturday Night Smash',date:'2026-09-27',start:'19:00',end:'21:00',venue:'Chennai Badminton Arena, Anna Nagar',capacity:28,price:250,booked:18,status:'open'},
+  {id:'s2',title:'Sunday Morning Rally',date:'2026-09-28',start:'07:00',end:'09:00',venue:'Decathlon Sports Center, Guindy',capacity:20,price:200,booked:15,status:'open'},
+  {id:'s3',title:'Doubles Practice Night',date:'2026-10-01',start:'18:00',end:'20:00',venue:'Surana Sports Complex, Porur',capacity:16,price:150,booked:12,status:'open'},
+  {id:'s4',title:'Next Saturday Session',date:'2026-10-04',start:'19:00',end:'21:00',venue:'Chennai Badminton Arena, Anna Nagar',capacity:28,price:250,booked:6,status:'open'},
+];
+
+var PLAYERS = [
+  {id:'p0',name:'Sathya Narayanan',phone:'98400 00001',skill:'Advanced',sessions:47,isAdmin:true},
+  {id:'p1',name:'Karthik Rajan',phone:'98400 00002',skill:'Advanced',sessions:38},
+  {id:'p2',name:'Priya Venkatesh',phone:'98400 00003',skill:'Intermediate',sessions:24},
+  {id:'p3',name:'Arjun Krishnaswamy',phone:'98400 00004',skill:'Expert',sessions:63},
+  {id:'p4',name:'Meenakshi Sundaram',phone:'98400 00005',skill:'Beginner',sessions:8},
+  {id:'p5',name:'Rahul Narayanan',phone:'98400 00006',skill:'Intermediate',sessions:19},
+  {id:'p6',name:'Divya Subramanian',phone:'98400 00007',skill:'Advanced',sessions:31},
+  {id:'p7',name:'Vijay Kumar',phone:'98400 00008',skill:'Intermediate',sessions:14},
+  {id:'p8',name:'Lakshmi Balaji',phone:'98400 00009',skill:'Beginner',sessions:5},
+  {id:'p9',name:'Anand Murugan',phone:'98400 00010',skill:'Expert',sessions:55},
+  {id:'p10',name:'Revathi Chandrasekaran',phone:'98400 00011',skill:'Intermediate',sessions:22},
+  {id:'p11',name:'Suresh Thiyagarajan',phone:'98400 00012',skill:'Advanced',sessions:40},
+  {id:'p12',name:'Nithya Palaniswamy',phone:'98400 00013',skill:'Beginner',sessions:3},
+  {id:'p13',name:'Balasubramanian G',phone:'98400 00014',skill:'Intermediate',sessions:17},
+  {id:'p14',name:'Kavitha Ramachandran',phone:'98400 00015',skill:'Advanced',sessions:28},
+];
+
+// ─── STATE ──────────────────────────────────────────────────
+var STATE = {
+  user: null,
+  bookings: {},   // sessionId -> 'confirmed'|'waitlist'
+  sessions: [],
+  selectedSkill: ''
+};
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem('msc_state');
+    if (raw) { var s = JSON.parse(raw); Object.assign(STATE, s); }
+    if (!STATE.sessions || !STATE.sessions.length) STATE.sessions = JSON.parse(JSON.stringify(SESSIONS));
+    if (!STATE.bookings) STATE.bookings = {};
+  } catch(e) {
+    STATE.sessions = JSON.parse(JSON.stringify(SESSIONS));
+    STATE.bookings = {};
+  }
+}
+
+function saveState() {
+  try { localStorage.setItem('msc_state', JSON.stringify(STATE)); } catch(e){}
+}
+
+// ─── BOOT ───────────────────────────────────────────────────
+loadState();
+if (STATE.user) {
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-main').classList.add('active');
+  renderAll();
+}
+
+// ─── LOGIN ──────────────────────────────────────────────────
+var selectedSkill = '';
+function selectSkill(el) {
+  document.querySelectorAll('.skill-opt').forEach(function(o){o.classList.remove('selected');});
+  el.classList.add('selected');
+  selectedSkill = el.dataset.skill;
+}
+
+function doLogin() {
+  var name = document.getElementById('login-name').value.trim();
+  var phone = document.getElementById('login-phone').value.trim();
+  if (!name) { toast('Enter your name first'); return; }
+  if (!phone) { toast('Enter your phone number'); return; }
+  if (!selectedSkill) { toast('Select your skill level'); return; }
+  STATE.user = {
+    id: 'me',
+    name: name,
+    phone: phone,
+    skill: selectedSkill,
+    isAdmin: false,
+    joinedAt: new Date().toISOString()
+  };
+  // make first player admin match if name matches
+  if (name.toLowerCase().indexOf('sathya') >= 0) STATE.user.isAdmin = true;
+  saveState();
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-main').classList.add('active');
+  renderAll();
+  toast('Welcome to Madras Shuttle Club! 🏸', 'success');
+}
+
+function doLogout() {
+  if (!confirm('Sign out?')) return;
+  STATE.user = null;
+  saveState();
+  location.reload();
+}
+
+// ─── NAVIGATION ─────────────────────────────────────────────
+var currentTab = 'home';
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  document.getElementById('tab-' + tab).style.display = 'block';
+  document.getElementById('nav-' + tab).classList.add('active');
+  currentTab = tab;
+  if (tab === 'home') renderHome();
+  if (tab === 'sessions') renderSessions();
+  if (tab === 'players') renderPlayers();
+  if (tab === 'profile') renderProfile();
+}
+
+// ─── RENDER ALL ─────────────────────────────────────────────
+function renderAll() {
+  var u = STATE.user;
+  if (!u) return;
+  renderHome();
+  renderPlayers();
+  renderProfile();
+  renderSessions();
+  // admin
+  if (u.isAdmin) {
+    document.getElementById('admin-create-btn').style.display = 'block';
+    document.getElementById('admin-row').style.display = 'flex';
+    document.getElementById('profile-admin-badge').style.display = 'block';
+  }
+}
+
+// ─── HOME ───────────────────────────────────────────────────
+function renderHome() {
+  var sessions = STATE.sessions;
+  if (!sessions.length) {
+    document.getElementById('home-hero').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏸</div><div class="empty-state-title">No sessions yet</div><div>Check back soon or ask the admin to create one.</div></div>';
+    return;
+  }
+  var next = sessions[0];
+  document.getElementById('home-hero').innerHTML = renderHeroCard(next);
+
+  // upcoming (rest)
+  var rest = sessions.slice(1, 3);
+  var upLab = document.getElementById('upcoming-label');
+  var upList = document.getElementById('home-upcoming');
+  if (rest.length) {
+    upLab.style.display = 'block';
+    upList.innerHTML = rest.map(renderMiniCard).join('');
+  } else {
+    upLab.style.display = 'none';
+    upList.innerHTML = '';
+  }
+}
+
+function renderHeroCard(s) {
+  var myStatus = STATE.bookings[s.id] || null;
+  var pct = Math.round((s.booked / s.capacity) * 100);
+  var fillClass = pct >= 100 ? 'full' : pct >= 80 ? 'warn' : '';
+  var slotsLeft = s.capacity - s.booked;
+  var isFull = s.booked >= s.capacity;
+  var dateStr = formatDate(s.date);
+  var timeStr = formatTime(s.start) + ' – ' + formatTime(s.end);
+
+  var badgeHtml = '';
+  if (myStatus === 'confirmed') {
+    badgeHtml = '<div class="confirmed-badge"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Your spot is confirmed!</div>';
+  } else if (myStatus === 'waitlist') {
+    badgeHtml = '<div class="waitlist-badge">⏳ You\'re on the waitlist</div>';
+  }
+
+  var btnHtml = '';
+  if (myStatus === 'confirmed') {
+    btnHtml = '<button class="btn-join cancel" onclick="cancelBooking(\''+s.id+'\')">Cancel My Booking</button>';
+  } else if (myStatus === 'waitlist') {
+    btnHtml = '<button class="btn-join cancel" onclick="cancelBooking(\''+s.id+'\')">Leave Waitlist</button>';
+  } else if (isFull) {
+    btnHtml = '<button class="btn-join waitlist" onclick="joinWaitlist(\''+s.id+'\')">Join Waitlist</button>';
+  } else {
+    btnHtml = '<button class="btn-join" onclick="joinSession(\''+s.id+'\')">Join Session →</button>';
+  }
+
+  return '<div class="session-hero" onclick="openSession(\''+s.id+'\')" style="cursor:default;">' +
+    '<div class="session-hero-inner">' +
+      '<div class="session-hero-tag">Next Session</div>' +
+      '<div class="session-hero-title">' + e(s.title) + '</div>' +
+      '<div class="session-meta">' +
+        '<div class="session-meta-row"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + dateStr + '</div>' +
+        '<div class="session-meta-row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + timeStr + '</div>' +
+        '<div class="session-meta-row"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + e(s.venue) + '</div>' +
+      '</div>' +
+      '<div class="capacity-wrap">' +
+        '<div class="capacity-label">' +
+          '<div><span class="filled">' + s.booked + '</span> <span class="of">/ ' + s.capacity + '</span></div>' +
+          '<div class="slots-left">' + (isFull ? 'Session full' : slotsLeft + ' slot' + (slotsLeft === 1 ? '' : 's') + ' left') + '</div>' +
+        '</div>' +
+        '<div class="capacity-bar"><div class="capacity-fill ' + fillClass + '" style="width:' + Math.min(pct,100) + '%"></div></div>' +
+      '</div>' +
+      badgeHtml +
+      btnHtml +
+      '<div class="price-tag">₹' + s.price + ' per session <span>• Venue payment</span></div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderMiniCard(s) {
+  var myStatus = STATE.bookings[s.id] || null;
+  var pct = Math.round((s.booked / s.capacity) * 100);
+  var fillClass = pct >= 100 ? 'full' : pct >= 80 ? 'warn' : '';
+  var isFull = s.booked >= s.capacity;
+  var chipClass = myStatus === 'confirmed' ? 'booked' : myStatus === 'waitlist' ? 'waitlist' : isFull ? 'full' : 'open';
+  var chipLabel = myStatus === 'confirmed' ? '✓ Booked' : myStatus === 'waitlist' ? 'Waitlist' : isFull ? 'Full' : 'Open';
+
+  return '<div class="session-card" onclick="openSession(\''+s.id+'\')">' +
+    '<div class="session-card-header">' +
+      '<div class="session-card-title">' + e(s.title) + '</div>' +
+      '<div class="session-price-chip">₹' + s.price + '</div>' +
+    '</div>' +
+    '<div class="session-card-info">' +
+      '<div class="info-chip"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + formatDateShort(s.date) + '</div>' +
+      '<div class="info-chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + formatTime(s.start) + '</div>' +
+      '<div class="info-chip"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + venueShort(s.venue) + '</div>' +
+    '</div>' +
+    '<div class="session-card-footer">' +
+      '<div class="mini-bar-wrap"><div class="mini-bar"><div class="mini-fill ' + fillClass + '" style="width:' + Math.min(pct,100) + '%"></div></div></div>' +
+      '<div class="mini-count">' + s.booked + '/' + s.capacity + '</div>' +
+      '<div class="status-chip ' + chipClass + '">' + chipLabel + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// ─── SESSIONS ───────────────────────────────────────────────
+function renderSessions() {
+  var list = document.getElementById('all-sessions-list');
+  if (!STATE.sessions.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📅</div><div class="empty-state-title">No sessions yet</div><div>Admin will create upcoming sessions.</div></div>';
+    return;
+  }
+  list.innerHTML = STATE.sessions.map(renderMiniCard).join('');
+}
+
+// ─── PLAYERS ────────────────────────────────────────────────
+function renderPlayers() {
+  var all = getPlayers();
+  var q = (document.getElementById('player-search') ? document.getElementById('player-search').value : '').toLowerCase();
+  var filtered = all.filter(function(p){ return !q || p.name.toLowerCase().indexOf(q) >= 0 || p.skill.toLowerCase().indexOf(q) >= 0; });
+  document.getElementById('players-count-sub').textContent = all.length + ' members';
+  var wrap = document.getElementById('players-list-wrap');
+  if (!filtered.length) {
+    wrap.innerHTML = '<div class="empty-state"><div>No players found</div></div>';
+    return;
+  }
+  wrap.innerHTML = '<div class="players-list">' +
+    filtered.map(function(p){
+      var initials = p.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+      var skillCls = 'skill-' + p.skill.toLowerCase();
+      var adminStar = p.isAdmin ? '<span class="admin-star">⚡</span>' : '';
+      var isMe = (STATE.user && p.id === 'me') || (STATE.user && p.name === STATE.user.name);
+      return '<div class="player-card">' +
+        '<div class="player-avatar">' + initials + '</div>' +
+        '<div class="player-info">' +
+          '<div class="player-name-wrap"><div class="player-name">' + e(p.name) + (isMe ? ' <span style="font-size:10px;color:var(--text-3);">(you)</span>' : '') + '</div>' + adminStar + '</div>' +
+          '<div class="player-sub">' + p.sessions + ' session' + (p.sessions === 1 ? '' : 's') + '</div>' +
+        '</div>' +
+        '<div class="skill-chip ' + skillCls + '">' + p.skill + '</div>' +
+      '</div>';
+    }).join('') +
+  '</div>';
+}
+
+function getPlayers() {
+  // merge static + current user
+  var all = PLAYERS.slice();
+  if (STATE.user && STATE.user.id === 'me') {
+    var existing = all.find(function(p){return p.name === STATE.user.name;});
+    if (!existing) {
+      var bookingCount = Object.values(STATE.bookings).filter(function(s){return s==='confirmed';}).length;
+      all.unshift({id:'me',name:STATE.user.name,phone:STATE.user.phone,skill:STATE.user.skill,sessions:bookingCount,isAdmin:STATE.user.isAdmin});
+    }
+  }
+  return all;
+}
+
+// ─── PROFILE ────────────────────────────────────────────────
+function renderProfile() {
+  var u = STATE.user;
+  if (!u) return;
+  var initials = u.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+  document.getElementById('profile-avatar').textContent = initials;
+  document.getElementById('profile-name').textContent = u.name;
+  var skillCls = 'skill-' + u.skill.toLowerCase();
+  document.getElementById('profile-meta').innerHTML = '<span class="skill-chip ' + skillCls + '" style="display:inline-flex;">' + u.skill + '</span><span class="profile-dot">•</span>' + u.phone;
+  document.getElementById('profile-skill-val').innerHTML = u.skill + ' <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+
+  var confirmed = Object.values(STATE.bookings).filter(function(s){return s==='confirmed';}).length;
+  document.getElementById('stat-sessions').textContent = confirmed;
+  document.getElementById('stat-upcoming').textContent = confirmed;
+
+  // my bookings
+  var myConfirmed = Object.entries(STATE.bookings).filter(function(e){return e[1]==='confirmed';}).map(function(e){return e[0];});
+  var myWaitlist  = Object.entries(STATE.bookings).filter(function(e){return e[1]==='waitlist';}).map(function(e){return e[0];});
+  var bSection = document.getElementById('my-bookings-section');
+  if (myConfirmed.length || myWaitlist.length) {
+    var html = '<div class="profile-section-title">My Bookings</div><div class="profile-block">';
+    myConfirmed.forEach(function(sid) {
+      var s = STATE.sessions.find(function(x){return x.id===sid;});
+      if (!s) return;
+      html += '<div class="profile-row" onclick="openSession(\''+sid+'\')">' +
+        '<div>' +
+          '<div class="profile-row-label">' + e(s.title) + '</div>' +
+          '<div style="font-size:12px;color:var(--text-3);margin-top:2px;">' + formatDateShort(s.date) + ' · ' + formatTime(s.start) + '</div>' +
+        '</div>' +
+        '<div class="status-chip booked">✓ Booked</div>' +
+      '</div>';
+    });
+    myWaitlist.forEach(function(sid) {
+      var s = STATE.sessions.find(function(x){return x.id===sid;});
+      if (!s) return;
+      html += '<div class="profile-row" onclick="openSession(\''+sid+'\')">' +
+        '<div><div class="profile-row-label">' + e(s.title) + '</div><div style="font-size:12px;color:var(--text-3);margin-top:2px;">' + formatDateShort(s.date) + '</div></div>' +
+        '<div class="status-chip waitlist">Waitlist</div>' +
+      '</div>';
+    });
+    html += '</div>';
+    bSection.innerHTML = html;
+  } else {
+    bSection.innerHTML = '';
+  }
+}
+
+// ─── BOOKING ACTIONS ────────────────────────────────────────
+function joinSession(sid) {
+  var s = STATE.sessions.find(function(x){return x.id===sid;});
+  if (!s) return;
+  if (s.booked >= s.capacity) { toast('Session is full! Join the waitlist.'); return; }
+  s.booked++;
+  STATE.bookings[sid] = 'confirmed';
+  saveState();
+  renderAll();
+  toast('🏸 Spot confirmed for ' + s.title + '!', 'success');
+  // refresh modal if open
+  if (document.getElementById('modal-session').style.display !== 'none') openSession(sid);
+}
+
+function joinWaitlist(sid) {
+  var s = STATE.sessions.find(function(x){return x.id===sid;});
+  if (!s) return;
+  STATE.bookings[sid] = 'waitlist';
+  saveState();
+  renderAll();
+  toast("⏳ You're on the waitlist for " + s.title);
+  if (document.getElementById('modal-session').style.display !== 'none') openSession(sid);
+}
+
+function cancelBooking(sid) {
+  var s = STATE.sessions.find(function(x){return x.id===sid;});
+  if (!s) return;
+  var prev = STATE.bookings[sid];
+  if (prev === 'confirmed') s.booked = Math.max(0, s.booked - 1);
+  delete STATE.bookings[sid];
+  saveState();
+  renderAll();
+  toast('Booking cancelled');
+  if (document.getElementById('modal-session').style.display !== 'none') openSession(sid);
+}
+
+// ─── SESSION DETAIL MODAL ───────────────────────────────────
+function openSession(sid) {
+  var s = STATE.sessions.find(function(x){return x.id===sid;});
+  if (!s) return;
+  var myStatus = STATE.bookings[sid] || null;
+  var pct = Math.round((s.booked / s.capacity) * 100);
+  var fillClass = pct >= 100 ? 'full' : pct >= 80 ? 'warn' : '';
+  var isFull = s.booked >= s.capacity;
+  var slotsLeft = s.capacity - s.booked;
+
+  var badgeHtml = '';
+  if (myStatus === 'confirmed') badgeHtml = '<div class="confirmed-badge"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Your spot is confirmed!</div>';
+  else if (myStatus === 'waitlist') badgeHtml = '<div class="waitlist-badge">⏳ You\'re on the waitlist</div>';
+
+  var btnHtml = '';
+  if (myStatus === 'confirmed') btnHtml = '<button class="btn-join cancel" onclick="cancelBooking(\''+sid+'\')" style="margin-top:8px;">Cancel My Booking</button>';
+  else if (myStatus === 'waitlist') btnHtml = '<button class="btn-join cancel" onclick="cancelBooking(\''+sid+'\')" style="margin-top:8px;">Leave Waitlist</button>';
+  else if (isFull) btnHtml = '<button class="btn-join waitlist" onclick="joinWaitlist(\''+sid+'\')" style="margin-top:8px;">Join Waitlist</button>';
+  else btnHtml = '<button class="btn-join" onclick="joinSession(\''+sid+'\')" style="margin-top:8px;">Join Session →</button>';
+
+  var shareBtn = '<button class="share-btn mt-12" onclick="shareSession(\''+sid+'\')" style="width:100%;justify-content:center;">' +
+    '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+    'Share Session' +
+  '</button>';
+
+  document.getElementById('modal-content').innerHTML =
+    '<div style="font-family:\'Syne\',sans-serif;font-size:24px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:16px;text-wrap:balance;">' + e(s.title) + '</div>' +
+    '<div class="detail-chips">' +
+      '<div class="detail-chip"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + formatDate(s.date) + '</div>' +
+      '<div class="detail-chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + formatTime(s.start) + ' – ' + formatTime(s.end) + '</div>' +
+      '<div class="detail-chip"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' + e(s.venue) + '</div>' +
+      '<div class="detail-chip"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>₹' + s.price + ' per player</div>' +
+    '</div>' +
+    '<div class="capacity-wrap" style="margin-bottom:20px;">' +
+      '<div class="capacity-label">' +
+        '<div><span class="filled">' + s.booked + '</span> <span class="of">/ ' + s.capacity + '</span></div>' +
+        '<div class="slots-left">' + (isFull ? 'Session full' : slotsLeft + ' slot' + (slotsLeft===1?'':'s') + ' left') + '</div>' +
+      '</div>' +
+      '<div class="capacity-bar"><div class="capacity-fill ' + fillClass + '" style="width:' + Math.min(pct,100) + '%"></div></div>' +
+    '</div>' +
+    badgeHtml + btnHtml +
+    '<div class="price-tag" style="margin-top:10px;margin-bottom:16px;">Pay at the venue · Bring your own racket</div>' +
+    '<div style="height:1px;background:var(--border);margin:16px 0;"></div>' +
+    shareBtn;
+
+  document.getElementById('modal-session').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-session').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// ─── ADMIN: CREATE SESSION ──────────────────────────────────
+function showCreateSession() {
+  if (!STATE.user || !STATE.user.isAdmin) { toast('Admin access only'); return; }
+  var m = document.getElementById('modal-create');
+  m.style.display = 'flex';
+  // set default date to next saturday
+  var d = new Date(); d.setDate(d.getDate() + (6 - d.getDay() + 7) % 7 || 7);
+  document.getElementById('cf-date').value = d.toISOString().split('T')[0];
+  document.getElementById('cf-start').value = '19:00';
+  document.getElementById('cf-end').value = '21:00';
+  document.getElementById('cf-cap').value = '28';
+  document.getElementById('cf-price').value = '250';
+}
+
+function closeCreate() {
+  document.getElementById('modal-create').style.display = 'none';
+}
+
+function createSession() {
+  var title = document.getElementById('cf-title').value.trim();
+  var date  = document.getElementById('cf-date').value;
+  var start = document.getElementById('cf-start').value;
+  var end   = document.getElementById('cf-end').value;
+  var venue = document.getElementById('cf-venue').value.trim();
+  var cap   = parseInt(document.getElementById('cf-cap').value) || 28;
+  var price = parseInt(document.getElementById('cf-price').value) || 250;
+  if (!title || !date || !venue) { toast('Fill in all required fields'); return; }
+  var id = 's' + Date.now();
+  STATE.sessions.push({id:id, title:title, date:date, start:start, end:end, venue:venue, capacity:cap, price:price, booked:0, status:'open'});
+  STATE.sessions.sort(function(a,b){return a.date.localeCompare(b.date);});
+  saveState();
+  closeCreate();
+  renderAll();
+  toast('✓ Session created!', 'success');
+}
+
+// ─── SHARE ──────────────────────────────────────────────────
+function shareSession(sid) {
+  var s = STATE.sessions.find(function(x){return x.id===sid;});
+  if (!s) return;
+  var text = '🏸 Madras Shuttle Club\n' + s.title + '\n' + formatDate(s.date) + ' · ' + formatTime(s.start) + ' – ' + formatTime(s.end) + '\n' + s.venue + '\n₹' + s.price + '\n\nJoin here: ' + location.href;
+  if (navigator.share) {
+    navigator.share({title:'Madras Shuttle Club — '+s.title, text:text}).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(text).then(function(){ toast('Copied to clipboard!', 'success'); }).catch(function(){ toast('Share: ' + text); });
+  }
+}
+
+function shareApp() {
+  var text = '🏸 MADRAS SHUTTLE CLUB IS LIVE!\n\nBook this weekend\'s badminton session through our new app.\n\n👇 Try it here: ' + location.href + '\n\nChennai • Play. Rally. Repeat.';
+  if (navigator.share) {
+    navigator.share({title:'Madras Shuttle Club', text:text}).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(text).then(function(){ toast('Share link copied!', 'success'); }).catch(function(){});
+  }
+}
+
+// ─── SKILL EDIT ─────────────────────────────────────────────
+function showSkillEdit() {
+  var skills = ['Beginner','Intermediate','Advanced','Expert'];
+  var current = STATE.user.skill;
+  var opts = skills.map(function(s){ return (s===current?'✓ ':' ') + s; }).join('\n');
+  var pick = prompt('Update skill level:\n\n' + opts + '\n\nEnter new skill:');
+  if (pick && skills.indexOf(pick.trim()) >= 0) {
+    STATE.user.skill = pick.trim();
+    saveState();
+    renderProfile();
+    toast('Skill updated to ' + pick.trim(), 'success');
+  }
+}
+
+// ─── TOAST ──────────────────────────────────────────────────
+var toastTimer;
+function toast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2800);
+}
+
+// ─── HELPERS ────────────────────────────────────────────────
+var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function formatDate(dateStr) {
+  var d = new Date(dateStr + 'T12:00:00');
+  return DAYS[d.getDay()] + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function formatDateShort(dateStr) {
+  var d = new Date(dateStr + 'T12:00:00');
+  return DAYS[d.getDay()].slice(0,3) + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
+}
+
+function formatTime(t) {
+  if (!t) return '';
+  var parts = t.split(':');
+  var h = parseInt(parts[0]); var m = parts[1];
+  var ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return h + (m !== '00' ? ':' + m : '') + ' ' + ampm;
+}
+
+function venueShort(venue) {
+  return venue.split(',')[0];
+}
+
+function e(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─── PWA: MANIFEST (injected as blob) ───────────────────────
+(function(){
+  var manifest = {
+    name: 'Madras Shuttle Club',
+    short_name: 'MSC',
+    description: 'Book your badminton session in Chennai',
+    start_url: '/',
+    display: 'standalone',
+    background_color: '#070C18',
+    theme_color: '#070C18',
+    orientation: 'portrait',
+    icons: [
+      {src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="40" fill="%23070C18"/><text y="130" x="96" font-size="110" text-anchor="middle">🏸</text></svg>', sizes: '192x192', type: 'image/svg+xml'},
+      {src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="%23070C18"/><text y="360" x="256" font-size="300" text-anchor="middle">🏸</text></svg>', sizes: '512x512', type: 'image/svg+xml'}
+    ]
+  };
+  try {
+    var blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('link');
+    link.rel = 'manifest'; link.href = url;
+    document.head.appendChild(link);
+  } catch(e){}
+})();
+
+// ─── PWA: SERVICE WORKER ─────────────────────────────────────
+(function(){
+  if (!('serviceWorker' in navigator)) return;
+  var swCode = [
+    "var CACHE='msc-v1';",
+    "self.addEventListener('install',function(e){self.skipWaiting();});",
+    "self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(keys){return Promise.all(keys.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));}));});",
+    "self.addEventListener('fetch',function(e){if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(function(r){var rc=r.clone();caches.open(CACHE).then(function(c){c.put(e.request,rc);});return r;}).catch(function(){return caches.match(e.request);}));});"
+  ].join('\n');
+  try {
+    var blob = new Blob([swCode], {type:'application/javascript'});
+    var url = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url).catch(function(){});
+  } catch(e){}
+})();
+
+// ─── PWA: INSTALL PROMPT ─────────────────────────────────────
+var _installPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  _installPrompt = e;
+  var dismissed = false;
+  try { dismissed = localStorage.getItem('msc_install_dismissed') === '1'; } catch(ex){}
+  if (!dismissed) {
+    setTimeout(function(){
+      document.getElementById('install-banner').classList.add('show');
+    }, 3000);
+  }
+});
+
+document.getElementById('install-btn').onclick = function() {
+  if (!_installPrompt) return;
+  _installPrompt.prompt();
+  _installPrompt.userChoice.then(function(r){
+    if (r.outcome === 'accepted') {
+      document.getElementById('install-banner').classList.remove('show');
+      toast('🏸 App installed!', 'success');
+    }
+    _installPrompt = null;
+  });
+};
+
+function dismissInstall() {
+  document.getElementById('install-banner').classList.remove('show');
+  try { localStorage.setItem('msc_install_dismissed','1'); } catch(e){}
+}
+
+window.addEventListener('appinstalled', function() {
+  document.getElementById('install-banner').classList.remove('show');
+  toast('🏸 Madras Shuttle Club installed!', 'success');
+});
+</script>
+</body>
+</html>
